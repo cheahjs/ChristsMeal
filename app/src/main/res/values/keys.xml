@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_raven_username">RAVEN_USERNAME</string>
+    <string name="pref_raven_password">RAVEN_PASSWORD</string>
+    <string name="pref_raven_authenticated">RAVEN_AUTHENTICATED</string>
+</resources>
