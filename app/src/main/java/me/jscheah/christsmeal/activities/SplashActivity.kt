@@ -1,9 +1,10 @@
-package me.jscheah.christsmeal
+package me.jscheah.christsmeal.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.preference.PreferenceManager
+import me.jscheah.christsmeal.R
 
 
 class SplashActivity : AppCompatActivity() {
