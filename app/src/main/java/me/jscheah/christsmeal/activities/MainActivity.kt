@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = getString(R.string.title_activity_main)
+
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
         Network.crsId = sharedPrefs.getString(getString(R.string.pref_raven_username), "")
         Network.password = sharedPrefs.getString(getString(R.string.pref_raven_password), "")

@@ -259,6 +259,39 @@ object Network {
 
     class LoginFailedException: Exception()
 
+    data class Balances(val sundries: String, val meals: String, val journeys: String)
+
+    suspend fun getBalances(): Balances {
+        Log.i(TAG, "getBalances: Starting transaction fetch")
+        if (!checkLogin())
+            throw LoginFailedException()
+        try {
+            val request = Request.Builder()
+                    .url(CHRISTS_TRANSACTION_HISTORY_URL)
+                    .build()
+            val response = async { httpClient.newCall(request).execute() }.await()
+            val finalUrl = response.request().url().toString()
+            Log.d(TAG, "getBalances: Redirected to $finalUrl")
+            if (CHRISTS_TRANSACTION_HISTORY_URL !in finalUrl) {
+                throw LoginFailedException()
+            }
+            val doc = Jsoup.parse(async { response.body()!!.string() }.await())
+
+            val balanceText = doc.select("h6[align=center]").find {
+                "Current Balances:" in it.text()
+            }
+            // Sample text: Current Balances:-&nbsp; Sundries= -£79.70&nbsp;&nbsp;&nbsp; Meals= £0.00&nbsp;&nbsp;&nbsp; Journeys= -£9.00&nbsp;
+            val splitParts = balanceText!!.text().split('\u00a0').map { it.trim() }
+            val sundries = splitParts.find { it.startsWith("Sundries= ") }!!.replace("Sundries= ", "")
+            val meals = splitParts.find { it.startsWith("Meals= ") }!!.replace("Meals= ", "")
+            val journeys = splitParts.find { it.startsWith("Journeys= ") }!!.replace("Journeys= ", "")
+            return Balances(sundries, meals, journeys)
+        } catch (e: Exception) {
+            Log.e(TAG, "getBalances: ", e)
+        }
+        throw Exception()
+    }
+
     suspend fun getTransactions(startDate: Date, endDate: Date): List<Transaction> {
         Log.i(TAG, "getTransactions: Starting transaction fetch from $startDate to $endDate")
         if (!checkLogin())
