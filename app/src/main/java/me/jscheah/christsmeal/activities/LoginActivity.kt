@@ -102,8 +102,10 @@ class LoginActivity : AppCompatActivity() {
             // perform the user login attempt.
             showProgress(true)
             async(UI) {
-                val loginSuccess = Network.shibbolethLogin(email, password, true)
-                if (loginSuccess) {
+                Network.crsId = email
+                Network.password = password
+                val loginSuccess = Network.shibbolethLogin(true)
+                if (loginSuccess && Network.mealBookingLogin()) {
                     mSharedPrefs!!.edit()
                             .putString(getString(R.string.pref_raven_username), email)
                             .putString(getString(R.string.pref_raven_password), password)

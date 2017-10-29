@@ -10,7 +10,6 @@
     <string name="error_incorrect_password">This username/password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="title_activity_main">Christs Meal Booking</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_transactions">Transactions</string>
+    <string name="title_bookings">Formal Hall</string>
 </resources>

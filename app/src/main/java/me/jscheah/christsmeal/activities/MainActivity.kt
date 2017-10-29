@@ -1,27 +1,29 @@
 package me.jscheah.christsmeal.activities
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import me.jscheah.christsmeal.Network
 import me.jscheah.christsmeal.R
+import me.jscheah.christsmeal.fragments.TransactionFragment
+
 
 class MainActivity : AppCompatActivity() {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-//            R.id.navigation_home -> {
-//                message.setText(R.string.title_home)
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_dashboard -> {
-//                message.setText(R.string.title_dashboard)
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_notifications -> {
-//                message.setText(R.string.title_notifications)
-//                return@OnNavigationItemSelectedListener true
-//            }
+            R.id.navigation_transactions -> {
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.fragment_container, TransactionFragment())
+                transaction.commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_bookings -> {
+                // TODO: Bookings fragment
+                return@OnNavigationItemSelectedListener true
+            }
         }
         false
     }
@@ -30,6 +32,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        Network.crsId = sharedPrefs.getString(getString(R.string.pref_raven_username), "")
+        Network.password = sharedPrefs.getString(getString(R.string.pref_raven_password), "")
+
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, TransactionFragment())
+        transaction.commit()
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 }
