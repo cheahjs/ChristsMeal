@@ -8,6 +8,7 @@ import kotlinx.coroutines.experimental.async
 import me.jscheah.christsmeal.models.Transaction
 import okhttp3.*
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.text.SimpleDateFormat
 import java.util.*
@@ -277,22 +278,26 @@ object Network {
             }
             val doc = Jsoup.parse(async { response.body()!!.string() }.await())
 
-            val balanceText = doc.select("h6[align=center]").find {
-                "Current Balances:" in it.text()
-            }
-            // Sample text: Current Balances:-&nbsp; Sundries= -£79.70&nbsp;&nbsp;&nbsp; Meals= £0.00&nbsp;&nbsp;&nbsp; Journeys= -£9.00&nbsp;
-            val splitParts = balanceText!!.text().split('\u00a0').map { it.trim() }
-            val sundries = splitParts.find { it.startsWith("Sundries= ") }!!.replace("Sundries= ", "")
-            val meals = splitParts.find { it.startsWith("Meals= ") }!!.replace("Meals= ", "")
-            val journeys = splitParts.find { it.startsWith("Journeys= ") }!!.replace("Journeys= ", "")
-            return Balances(sundries, meals, journeys)
+            return parseBalances(doc)
         } catch (e: Exception) {
             Log.e(TAG, "getBalances: ", e)
         }
         throw Exception()
     }
 
-    suspend fun getTransactions(startDate: Date, endDate: Date): List<Transaction> {
+    private fun parseBalances(doc: Document): Balances {
+        val balanceText = doc.select("h6[align=center]").find {
+            "Current Balances:" in it.text()
+        }
+        // Sample text: Current Balances:-&nbsp; Sundries= -£79.70&nbsp;&nbsp;&nbsp; Meals= £0.00&nbsp;&nbsp;&nbsp; Journeys= -£9.00&nbsp;
+        val splitParts = balanceText!!.text().split('\u00a0').map { it.trim() }
+        val sundries = splitParts.find { it.startsWith("Sundries= ") }!!.replace("Sundries= ", "")
+        val meals = splitParts.find { it.startsWith("Meals= ") }!!.replace("Meals= ", "")
+        val journeys = splitParts.find { it.startsWith("Journeys= ") }!!.replace("Journeys= ", "")
+        return Balances(sundries, meals, journeys)
+    }
+
+    suspend fun getTransactions(startDate: Date, endDate: Date): Pair<List<Transaction>, Balances> {
         Log.i(TAG, "getTransactions: Starting transaction fetch from $startDate to $endDate")
         if (!checkLogin())
             throw LoginFailedException()
@@ -315,19 +320,19 @@ object Network {
             }
             val doc = Jsoup.parse(async { response.body()!!.string() }.await())
 
-            val rows = doc.select(".Grid > tbody > tr")
-            return parseTransactionRows(rows)
+            return Pair(parseTransactionRows(doc), parseBalances(doc))
         } catch (e: Exception) {
             Log.e(TAG, "getTransactions: ", e)
         }
-        return emptyList()
+        return Pair(emptyList(), Balances("?", "?","?"))
     }
 
-    private fun parseTransactionRows(elements: Elements): List<Transaction> {
+    private fun parseTransactionRows(doc: Document): List<Transaction> {
         var date = ""
         var time = ""
         val transactionList = LinkedList<Transaction>()
-        for (row in elements) {
+        val rows = doc.select(".Grid > tbody > tr")
+        for (row in rows) {
             if (row.hasClass("Caption")) {
                 val caption = row.child(0).text()
                 date = caption.substring(1).split('\u00a0')[0].trim()

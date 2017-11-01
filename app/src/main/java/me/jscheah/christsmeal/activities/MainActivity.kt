@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_bookings -> {
                 // TODO: Bookings fragment
-                return@OnNavigationItemSelectedListener true
+                return@OnNavigationItemSelectedListener false
             }
         }
         false
