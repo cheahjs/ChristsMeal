@@ -43,7 +43,7 @@ class TransactionRecyclerViewAdapter :
         when (item) {
             is Transaction -> {
                 holder.mTransaction = item
-                holder.mNameView!!.text = item.itemDescription
+                holder.mNameView!!.text = "${if (item.quantity != "1") "(${item.quantity}) " else ""}${item.itemDescription}"
                 holder.mPriceView!!.text = item.value
             }
             is TransactionHeader -> {
