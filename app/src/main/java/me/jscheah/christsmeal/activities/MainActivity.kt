@@ -1,6 +1,7 @@
 package me.jscheah.christsmeal.activities
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
@@ -12,12 +13,18 @@ import me.jscheah.christsmeal.fragments.TransactionFragment
 
 class MainActivity : AppCompatActivity() {
 
+    private var transactionFragment = TransactionFragment.newInstance()
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        // Do nothing if reselected
+        if (navigation.selectedItemId == item.itemId) {
+            return@OnNavigationItemSelectedListener false
+        }
         when (item.itemId) {
             R.id.navigation_transactions -> {
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragment_container, TransactionFragment())
-                transaction.commit()
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, transactionFragment)
+                        .commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_bookings -> {
@@ -39,9 +46,18 @@ class MainActivity : AppCompatActivity() {
         Network.crsId = sharedPrefs.getString(getString(R.string.pref_raven_username), "")
         Network.password = sharedPrefs.getString(getString(R.string.pref_raven_password), "")
 
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, TransactionFragment())
-        transaction.commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, transactionFragment, FRAGMENT_TAG_TRANSACTION)
+                    .commit()
+        } else {
+            transactionFragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_TRANSACTION)
+                    as TransactionFragment
+        }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    companion object {
+        const val FRAGMENT_TAG_TRANSACTION = "fragment:transactions"
     }
 }

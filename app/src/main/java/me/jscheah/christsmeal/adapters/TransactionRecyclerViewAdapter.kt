@@ -1,5 +1,6 @@
 package me.jscheah.christsmeal.adapters
 
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +21,10 @@ class TransactionRecyclerViewAdapter :
         RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>(),
         StickyHeaderHandler {
 
-    private var mValues: List<TransactionBase>? = null
-    private val VIEW_HEADER = 1
-    private val VIEW_ITEM = 0
+    var values: List<TransactionBase>? = null
 
     override fun getAdapterData(): MutableList<*> {
-        return mValues?.toMutableList() ?: LinkedList<TransactionBase>()
+        return values?.toMutableList() ?: LinkedList<TransactionBase>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,7 +38,7 @@ class TransactionRecyclerViewAdapter :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues!![position]
+        val item = values!![position]
         when (item) {
             is Transaction -> {
                 holder.mTransaction = item
@@ -51,13 +50,26 @@ class TransactionRecyclerViewAdapter :
             }
         }
     }
+
     override fun getItemCount(): Int {
-        return mValues?.size ?: 0
+        return values?.size ?: 0
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (mValues?.get(position) ?: TransactionBase() is Transaction)
+        return if (values?.get(position) is Transaction)
             0 else 1
+    }
+
+    fun saveState(): Bundle {
+        val bundle = Bundle()
+        bundle.putParcelableArray(STATE_LISTS, values?.toTypedArray())
+        return bundle
+    }
+
+    fun restoreState(bundle: Bundle): Boolean {
+        val state = bundle.getParcelableArray(STATE_LISTS) ?: return false
+        values = (state as Array<TransactionBase>).toList()
+        return true
     }
 
     fun setData(data: List<Transaction>) {
@@ -70,7 +82,7 @@ class TransactionRecyclerViewAdapter :
             }
             mutableList.add(it)
         }
-        mValues = mutableList.toList()
+        values = mutableList.toList()
     }
 
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
@@ -82,5 +94,11 @@ class TransactionRecyclerViewAdapter :
         override fun toString(): String {
             return super.toString() + " '" + (mNameView?.text ?: mHeaderView?.text) + "'"
         }
+    }
+
+    companion object {
+        const val VIEW_HEADER = 1
+        const val VIEW_ITEM = 0
+        const val STATE_LISTS = "state:transaction_lists"
     }
 }

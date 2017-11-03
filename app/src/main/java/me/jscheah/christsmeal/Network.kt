@@ -1,5 +1,7 @@
 package me.jscheah.christsmeal
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
@@ -260,7 +262,32 @@ object Network {
 
     class LoginFailedException: Exception()
 
-    data class Balances(val sundries: String, val meals: String, val journeys: String)
+    data class Balances(val sundries: String, val meals: String, val journeys: String): Parcelable {
+        constructor(parcel: Parcel) : this(
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString())
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(sundries)
+            parcel.writeString(meals)
+            parcel.writeString(journeys)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<Balances> {
+            override fun createFromParcel(parcel: Parcel): Balances {
+                return Balances(parcel)
+            }
+
+            override fun newArray(size: Int): Array<Balances?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 
     suspend fun getBalances(): Balances {
         Log.i(TAG, "getBalances: Starting transaction fetch")
