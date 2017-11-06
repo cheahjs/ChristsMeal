@@ -2,6 +2,7 @@ package me.jscheah.christsmeal.models
 
 data class Booking(
         // Data
+        val id: String,
         val rawDate: String,
         val date: Long,
         val rawTime: String,
