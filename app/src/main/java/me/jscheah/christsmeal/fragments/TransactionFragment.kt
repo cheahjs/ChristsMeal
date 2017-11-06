@@ -129,6 +129,10 @@ class TransactionFragment : Fragment() {
         textSundries.text = sundries
     }
 
+    fun scrollToTop() {
+        layoutManager.scrollToPosition(0)
+    }
+
     companion object {
         const val STATE_ADAPTER = "state:adapter"
         const val STATE_LAYOUT = "state:layout"

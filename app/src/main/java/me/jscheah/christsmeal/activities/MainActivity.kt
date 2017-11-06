@@ -15,18 +15,21 @@ class MainActivity : AppCompatActivity() {
     private var transactionFragment = TransactionFragment.newInstance()
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        // Do nothing if reselected
-        if (navigation.selectedItemId == item.itemId) {
-            return@OnNavigationItemSelectedListener false
-        }
         when (item.itemId) {
             R.id.navigation_transactions -> {
+                if (navigation.selectedItemId == item.itemId) {
+                    transactionFragment.scrollToTop()
+                    return@OnNavigationItemSelectedListener false
+                }
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, transactionFragment)
                         .commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_bookings -> {
+                if (navigation.selectedItemId == item.itemId) {
+                    return@OnNavigationItemSelectedListener false
+                }
                 // TODO: Bookings fragment
                 return@OnNavigationItemSelectedListener false
             }
