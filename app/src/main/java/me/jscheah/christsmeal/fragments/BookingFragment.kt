@@ -11,8 +11,6 @@ import android.view.ViewGroup
 
 import me.jscheah.christsmeal.R
 import me.jscheah.christsmeal.adapters.BookingRecyclerViewAdapter
-import me.jscheah.christsmeal.fragments.dummy.DummyContent
-import me.jscheah.christsmeal.fragments.dummy.DummyContent.DummyItem
 
 /**
  * A fragment representing a list of Bookings.
