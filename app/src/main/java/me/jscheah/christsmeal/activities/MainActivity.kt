@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import me.jscheah.christsmeal.data.Network
 import me.jscheah.christsmeal.R
+import me.jscheah.christsmeal.fragments.BookingFragment
 import me.jscheah.christsmeal.fragments.TransactionFragment
 
 
 class MainActivity : AppCompatActivity() {
 
     private var transactionFragment = TransactionFragment.newInstance()
+    private var bookingFragment = BookingFragment.newInstance()
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -30,8 +32,10 @@ class MainActivity : AppCompatActivity() {
                 if (navigation.selectedItemId == item.itemId) {
                     return@OnNavigationItemSelectedListener false
                 }
-                // TODO: Bookings fragment
-                return@OnNavigationItemSelectedListener false
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, bookingFragment)
+                        .commit()
+                return@OnNavigationItemSelectedListener true
             }
         }
         false
@@ -55,11 +59,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             transactionFragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_TRANSACTION)
                     as TransactionFragment
+            bookingFragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_BOOKING)
+                    as BookingFragment
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
     companion object {
         const val FRAGMENT_TAG_TRANSACTION = "fragment:transactions"
+        const val FRAGMENT_TAG_BOOKING = "fragment:bookings"
     }
 }
