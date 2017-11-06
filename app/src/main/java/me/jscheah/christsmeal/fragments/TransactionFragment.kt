@@ -1,25 +1,25 @@
 package me.jscheah.christsmeal.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.android.synthetic.main.fragment_transaction_list.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
-import me.jscheah.christsmeal.Network
-import me.jscheah.christsmeal.Network.Balances
+import me.jscheah.christsmeal.data.Network.Balances
 
 import me.jscheah.christsmeal.R
 import me.jscheah.christsmeal.adapters.TransactionRecyclerViewAdapter
+import me.jscheah.christsmeal.data.DataManager
+import me.jscheah.christsmeal.data.Network
 import me.jscheah.christsmeal.models.Transaction
-import java.util.*
+import kotlin.properties.Delegates
 
 /**
  * A fragment representing a list of [Transaction]s.
@@ -33,7 +33,8 @@ class TransactionFragment : Fragment() {
     private var transactionList: List<Transaction>? = null
     private var balances: Balances? = null
     private var adapter = TransactionRecyclerViewAdapter()
-    private var layoutManager: StickyLayoutManager? = null
+    private var layoutManager: StickyLayoutManager by Delegates.notNull()
+    private var dataManager: DataManager by Delegates.notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,15 +50,17 @@ class TransactionFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        dataManager = DataManager(view!!.context)
+
         swipeRefreshLayout.setOnRefreshListener { refreshData() }
-        layoutManager = StickyLayoutManager(view!!.context, adapter)
+        layoutManager = StickyLayoutManager(view.context, adapter)
         if (savedInstanceState == null) {
             swipeRefreshLayout.isRefreshing = true
         } else {
-            layoutManager!!.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_LAYOUT))
+            layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_LAYOUT))
         }
-        transaction_list.addItemDecoration(DividerItemDecoration(view.context, layoutManager!!.orientation))
-        layoutManager!!.elevateHeaders(true)
+        transaction_list.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
+        layoutManager.elevateHeaders(true)
         transaction_list.layoutManager = layoutManager
         transaction_list.adapter = adapter
     }
@@ -70,6 +73,8 @@ class TransactionFragment : Fragment() {
         if (adapter.values != null) {
             adapter.notifyDataSetChanged()
         } else {
+            if (dataManager.isTransactionCached())
+                getCachedData()
             refreshData()
         }
     }
@@ -77,7 +82,7 @@ class TransactionFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBundle(STATE_ADAPTER, adapter.saveState())
-        outState?.putParcelable(STATE_LAYOUT, layoutManager?.onSaveInstanceState())
+        outState?.putParcelable(STATE_LAYOUT, layoutManager.onSaveInstanceState())
         outState?.putParcelable(STATE_BALANCES, balances)
     }
 
@@ -88,19 +93,30 @@ class TransactionFragment : Fragment() {
         super.onDestroy()
     }
 
+    private fun getCachedData() {
+        transactionList = dataManager.getTransactionHistoryCached()
+        balances = dataManager.getBalancesCached()
+        setBalances()
+        adapter.setData(transactionList!!)
+        adapter.notifyDataSetChanged()
+    }
+
     private fun refreshData() {
         if (refreshJob != null && refreshJob!!.isActive)
             return
         swipeRefreshLayout.isRefreshing = true
         refreshJob = launch(UI) {
-            val (transactionList, balances) = Network.getTransactions(
-                    Date(System.currentTimeMillis()-(10L*365*24*60*60*1000)),
-                    Date(System.currentTimeMillis()+(2L*365*24*60*60*1000)))
-            this@TransactionFragment.transactionList = transactionList
-            this@TransactionFragment.balances = balances
+            try {
+                transactionList = dataManager.getTransactionHistory(10 * 365L, 2 * 365L)
+            } catch (e: Network.LoginFailedException) {
+                Toast.makeText(this@TransactionFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
+                swipeRefreshLayout.isRefreshing = false
+                return@launch
+            }
+            balances = dataManager.getBalancesCached()
 
             setBalances()
-            adapter.setData(transactionList)
+            adapter.setData(transactionList!!)
             adapter.notifyDataSetChanged()
             swipeRefreshLayout.isRefreshing = false
         }

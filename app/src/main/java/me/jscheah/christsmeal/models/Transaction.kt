@@ -5,28 +5,34 @@ import android.os.Parcelable
 import com.brandongogetap.stickyheaders.exposed.StickyHeader
 
 data class Transaction(
-        val date: String,
-        val time: String,
+        val rawDate: String,
+        val rawTime: String,
+        val date: Long,
         val itemId: String,
         val itemDescription: String,
         val quantity: String,
-        val value: String
+        val value: String,
+        val groupOrder: Int
 ) : TransactionBase() {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
+            parcel.readLong(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString())
+            parcel.readString(),
+            parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(date)
-        parcel.writeString(time)
+        parcel.writeString(rawDate)
+        parcel.writeString(rawTime)
+        parcel.writeLong(date)
         parcel.writeString(itemId)
         parcel.writeString(itemDescription)
         parcel.writeString(quantity)
         parcel.writeString(value)
+        parcel.writeInt(groupOrder)
     }
 
     override fun describeContents(): Int {

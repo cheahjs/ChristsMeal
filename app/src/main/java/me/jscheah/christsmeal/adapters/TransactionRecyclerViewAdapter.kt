@@ -2,6 +2,7 @@ package me.jscheah.christsmeal.adapters
 
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ import java.util.*
 class TransactionRecyclerViewAdapter :
         RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>(),
         StickyHeaderHandler {
-
+    private val TAG = this::class.java.simpleName
     var values: List<TransactionBase>? = null
 
     override fun getAdapterData(): MutableList<*> {
@@ -68,20 +69,26 @@ class TransactionRecyclerViewAdapter :
 
     fun restoreState(bundle: Bundle): Boolean {
         val state = bundle.getParcelableArray(STATE_LISTS) ?: return false
-        values = (state as Array<TransactionBase>).toList()
+        try {
+            values = state.map { it as TransactionBase }.toList()
+        } catch (e: ClassCastException) {
+            Log.e(TAG, "restoreState: failed to restore state $e")
+            return false
+        }
         return true
     }
 
     fun setData(data: List<Transaction>) {
         val mutableList = emptyList<TransactionBase>().toMutableList()
         var currentDate = ""
-        data.forEach {
-            if (currentDate != it.date) {
-                mutableList.add(TransactionHeader(it.date))
-                currentDate = it.date
-            }
-            mutableList.add(it)
-        }
+        data.sortedWith(compareByDescending<Transaction> { it.date }.thenBy { it.groupOrder })
+                .forEach {
+                    if (currentDate != it.rawDate) {
+                        mutableList.add(TransactionHeader(it.rawDate))
+                        currentDate = it.rawDate
+                    }
+                    mutableList.add(it)
+                }
         values = mutableList.toList()
     }
 

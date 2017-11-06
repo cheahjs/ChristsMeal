@@ -1,4 +1,4 @@
-package me.jscheah.christsmeal
+package me.jscheah.christsmeal.data
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -11,7 +11,7 @@ import me.jscheah.christsmeal.models.Transaction
 import okhttp3.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -105,7 +105,7 @@ object Network {
             Log.d(TAG, "ravenLogin: Redirected to $finalUrl")
             return NetResult(RAVEN_AUTH_SUBMIT_PATH !in finalUrl, response)
         } catch (e: Exception) {
-            Log.e("Network", "Raven login failed", e)
+            Log.e("Network", "Raven login failed: ${e.message}", e)
         }
 
         // Something has gone horribly wrong
@@ -137,7 +137,7 @@ object Network {
             Log.d(TAG, "shibbolethRedirect: Redirected to $finalUrl")
             return NetResult(CHRISTS_INTRANET_HOST in finalUrl, response)
         } catch (e: Exception) {
-            Log.e("Network", "Raven login failed", e)
+            Log.e("Network", "shibbolethRedirect login failed: ${e.message}", e)
         }
 
         // Something has gone horribly wrong
@@ -205,7 +205,7 @@ object Network {
                 }
             }
         } catch (e: Exception) {
-            Log.e("Network", "Shibboleth login failed", e)
+            Log.e("Network", "Shibboleth login failed: ${e.message}", e)
         }
 
         // Something has gone horribly wrong
@@ -254,6 +254,7 @@ object Network {
 
     private fun loginValid() = (lastLogin > 0 && lastLogin + 10*60*1000 > System.currentTimeMillis())
 
+    @Synchronized
     private suspend fun checkLogin(): Boolean {
         if (loginValid())
             return true
@@ -261,6 +262,7 @@ object Network {
     }
 
     class LoginFailedException: Exception()
+    class NetworkErrorException: Exception()
 
     data class Balances(val sundries: String, val meals: String, val journeys: String): Parcelable {
         constructor(parcel: Parcel) : this(
@@ -349,26 +351,39 @@ object Network {
 
             return Pair(parseTransactionRows(doc), parseBalances(doc))
         } catch (e: Exception) {
-            Log.e(TAG, "getTransactions: ", e)
+            Log.e(TAG, "getTransactions: $e", e)
+            throw NetworkErrorException()
         }
-        return Pair(emptyList(), Balances("?", "?","?"))
     }
 
     private fun parseTransactionRows(doc: Document): List<Transaction> {
-        var date = ""
-        var time = ""
+        val dateFormat = SimpleDateFormat("EEE, dd/MM/yyyy", Locale.UK)
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.UK)
         val transactionList = LinkedList<Transaction>()
+
+        var rawDate = ""
+        var rawTime = ""
+        var date: Date? = Date()
+        var time: Long
+        var groupIndex = 0
+
         val rows = doc.select(".Grid > tbody > tr")
         for (row in rows) {
             if (row.hasClass("Caption")) {
+                groupIndex = 0
                 val caption = row.child(0).text()
-                date = caption.substring(1).split('\u00a0')[0].trim()
-                time = caption.split('\u00a0').last().trim()
+                rawDate = caption.substring(1).split('\u00a0')[0].trim()
+                rawTime = caption.split('\u00a0').last().trim()
+                date = dateFormat.parse(rawDate)
+                time = try { timeFormat.parse(rawTime).time } catch(e: ParseException) { 0 }
+                date = Date(date.time + time)
+                Log.d(TAG, "parseTransactionRows: $rawDate ($rawTime) parsed as $date ($time)")
                 continue
             }
             if (row.hasClass("Row")) {
                 val children = row.children().map { it.text().trim() }
-                transactionList.add(Transaction(date, time, children[1], children[2], children[3], children[4]))
+                transactionList.add(Transaction(rawDate, rawTime, date?.time ?: -1,
+                        children[1], children[2], children[3], children[4], groupIndex++))
             }
             if (row.hasClass("SubTotal")) {
                 continue

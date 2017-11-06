@@ -12,4 +12,6 @@
     <string name="title_activity_main">Christs Meal Booking</string>
     <string name="title_transactions">Transactions</string>
     <string name="title_bookings">Formal Hall</string>
+
+    <string name="network_fail">Failed to retrieve data</string>
 </resources>

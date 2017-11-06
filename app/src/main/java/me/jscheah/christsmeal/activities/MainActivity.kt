@@ -1,12 +1,11 @@
 package me.jscheah.christsmeal.activities
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import me.jscheah.christsmeal.Network
+import me.jscheah.christsmeal.data.Network
 import me.jscheah.christsmeal.R
 import me.jscheah.christsmeal.fragments.TransactionFragment
 

@@ -21,7 +21,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
-import me.jscheah.christsmeal.Network
+import me.jscheah.christsmeal.data.Network
 import me.jscheah.christsmeal.R
 
 /**
