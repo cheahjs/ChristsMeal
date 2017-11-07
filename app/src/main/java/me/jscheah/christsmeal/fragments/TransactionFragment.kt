@@ -2,6 +2,7 @@ package me.jscheah.christsmeal.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.view.LayoutInflater
 import android.view.View
@@ -52,10 +53,13 @@ class TransactionFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         dataManager = DataManager(view!!.context)
 
-        swipeRefreshLayout.setOnRefreshListener { refreshData() }
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            refreshData()
+        }
         layoutManager = StickyLayoutManager(view.context, adapter)
         if (savedInstanceState == null) {
-            swipeRefreshLayout.isRefreshing = true
+//            swipeRefreshLayout.isRefreshing = true
         } else {
             layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_LAYOUT))
         }
@@ -67,6 +71,7 @@ class TransactionFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar?.title = "Transactions"
         if (balances != null) {
             setBalances()
         }
@@ -75,7 +80,7 @@ class TransactionFragment : Fragment() {
         } else {
             if (dataManager.isTransactionCached())
                 getCachedData()
-            refreshData()
+            refreshData(!dataManager.isTransactionCached())
         }
     }
 
@@ -101,10 +106,11 @@ class TransactionFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun refreshData() {
+    private fun refreshData(showRefresh: Boolean = true) {
         if (refreshJob != null && refreshJob!!.isActive)
             return
-        swipeRefreshLayout.isRefreshing = true
+        if (showRefresh)
+            swipeRefreshLayout.isRefreshing = true
         refreshJob = launch(UI) {
             try {
                 transactionList = dataManager.getTransactionHistory(10 * 365L, 2 * 365L)
