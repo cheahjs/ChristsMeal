@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_bookings -> {
                 if (navigation.selectedItemId == item.itemId) {
+                    bookingFragment.scrollToTop()
                     return@OnNavigationItemSelectedListener false
                 }
                 supportFragmentManager.beginTransaction()
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container,bookingFragment, FRAGMENT_TAG_BOOKING)
                     .replace(R.id.fragment_container, transactionFragment, FRAGMENT_TAG_TRANSACTION)
                     .commit()
         } else {

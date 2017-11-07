@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/booking_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="07/11/2017" />
+
+    <TextView
+        android:id="@+id/booking_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/booking_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/booking_date"
+        tools:text="Events (CC Medical Soc)" />
+
+    <TextView
+        android:id="@+id/label_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/booking_date" />
+
+    <TextView
+        android:id="@+id/booking_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="Not Listed"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/label_time"
+        app:layout_constraintStart_toEndOf="@+id/label_time"
+        app:layout_constraintTop_toTopOf="@+id/label_time"
+        tools:text="19.00 for 19.30" />
+
+    <TextView
+        android:id="@+id/label_spaces"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spaces: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_time" />
+
+    <TextView
+        android:id="@+id/booking_spaces"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/label_spaces"
+        app:layout_constraintStart_toStartOf="@+id/booking_time"
+        app:layout_constraintTop_toTopOf="@+id/label_spaces"
+        tools:text="80 (0 Guests Allowed)" />
+
+    <TextView
+        android:id="@+id/label_booked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Booked:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_spaces" />
+
+    <TextView
+        android:id="@+id/booking_booked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/label_booked"
+        app:layout_constraintStart_toStartOf="@+id/booking_spaces"
+        app:layout_constraintTop_toTopOf="@+id/label_booked"
+        tools:text="2" />
+
+    <TextView
+        android:id="@+id/booking_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_booked"
+        tools:text="Booking closes noon Wednesday 15th November. Cost of meal is £15.00 which includes a charity donation of £2.70. Wine is £7.00 per person. Please tick the wine option if required.  " />
+</android.support.constraint.ConstraintLayout>

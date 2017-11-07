@@ -7,6 +7,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.CookiePersistor
 import kotlinx.coroutines.experimental.async
+import me.jscheah.christsmeal.models.Booking
 import me.jscheah.christsmeal.models.Transaction
 import okhttp3.*
 import org.jsoup.Jsoup
@@ -390,5 +391,62 @@ object Network {
             }
         }
         return transactionList
+    }
+
+    suspend fun getMealBookings(): List<Booking> {
+        Log.i(TAG, "getMealBookings: Starting fetch")
+        if (!checkLogin())
+            throw LoginFailedException()
+        try {
+            val request = Request.Builder()
+                    .url(CHRISTS_MEALBOOKING_URL)
+                    .build()
+            val response = async { httpClient.newCall(request).execute() }.await()
+            val finalUrl = response.request().url().toString()
+            Log.d(TAG, "getMealBookings: Redirected to $finalUrl")
+            if (CHRISTS_MEALBOOKING_URL !in finalUrl) {
+                throw LoginFailedException()
+            }
+            val doc = Jsoup.parse(async { response.body()!!.string() }.await())
+
+            return parseMealBookings(doc)
+        } catch (e: Exception) {
+            Log.e(TAG, "getMealBookings: $e")
+            throw NetworkErrorException()
+        }
+    }
+
+    private fun parseMealBookings(doc: Document): List<Booking> {
+        val rows = doc.select(".GridAS1 > tbody > tr.RowAS1")
+        val bookingList = LinkedList<Booking>()
+
+        val dateFormat = SimpleDateFormat("EEE, dd/MM/yyyy", Locale.UK)
+
+        for (row in rows) {
+            val textChildren = row.children().map { it.text().replace("\u00a0", " ").trim() }
+            val children = row.children()
+            bookingList.add(
+                    Booking(
+                            children[11].child(0).attr("value"),
+                            textChildren[0],
+                            dateFormat.parse(textChildren[0]).time,
+                            textChildren[2],
+                            textChildren[4],
+                            textChildren[6],
+                            textChildren[8],
+                            textChildren[10],
+                            children[12].child(0).select("input[type=submit][name=btnBook]").isNotEmpty(),
+                            children[12].child(0).select("input[type=submit][name=btnGuest]").isNotEmpty(),
+                            children[13].child(0).select("input[type=submit]").isNotEmpty(),
+                            children[14].child(0).select("input[type=submit]").isNotEmpty(),
+                            children[15].child(0).select("input[type=submit]").isNotEmpty(),
+                            children[16].child(0).select("input[type=submit]").isNotEmpty(),
+                            children[17].child(0).select("input[type=submit]").isNotEmpty(),
+                            message = children.last().select("input[type=hidden][name=message]").attr("value").trim()
+                    )
+            )
+        }
+
+        return bookingList.toList()
     }
 }
