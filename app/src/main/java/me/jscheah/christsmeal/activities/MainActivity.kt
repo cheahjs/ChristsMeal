@@ -59,10 +59,10 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.fragment_container, transactionFragment, FRAGMENT_TAG_TRANSACTION)
                     .commit()
         } else {
-            transactionFragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_TRANSACTION)
-                    as TransactionFragment
-            bookingFragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_BOOKING)
-                    as BookingFragment
+            transactionFragment = (supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_TRANSACTION)
+                    as TransactionFragment?) ?: transactionFragment
+            bookingFragment = (supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_BOOKING)
+                    as BookingFragment?) ?: bookingFragment
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
