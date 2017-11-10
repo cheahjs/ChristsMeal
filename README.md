@@ -7,4 +7,8 @@ Android app for interfacing with the Christ's College meal booking website
 ## Features
 
 * Viewing transaction history (Formal Hall, Upper Hall, and Buttery transactions)
-* ~~Viewing and managing bookings~~
+* Viewing bookings
+
+## Planned features
+
+* Managing bookings
