@@ -431,7 +431,7 @@ object Network {
                             textChildren[0],
                             dateFormat.parse(textChildren[0]).time,
                             textChildren[2],
-                            textChildren[4].replace("\u00a0)", ")"),
+                            textChildren[4].replace(" )", ")"),
                             textChildren[6],
                             textChildren[8],
                             textChildren[10],
