@@ -56,7 +56,6 @@ class BookingFragment : Fragment() {
         } else {
             layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_LAYOUT))
         }
-        booking_list.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
         booking_list.layoutManager = layoutManager
         booking_list.adapter = adapter
     }
