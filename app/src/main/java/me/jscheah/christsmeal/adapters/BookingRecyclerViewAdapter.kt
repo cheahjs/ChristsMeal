@@ -1,5 +1,6 @@
 package me.jscheah.christsmeal.adapters
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import me.jscheah.christsmeal.R
 import me.jscheah.christsmeal.models.Booking
 import kotlinx.android.synthetic.main.item_booking.view.*
+import me.jscheah.christsmeal.activities.BookingActivity
+import org.jetbrains.anko.sdk25.coroutines.onClick
 
 /**
  * [RecyclerView.Adapter] that can display a [Booking]
@@ -29,11 +32,7 @@ class BookingRecyclerViewAdapter :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values!![position]
-        when (item) {
-            is Booking -> {
-                holder.bind(item)
-            }
-        }
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int {
@@ -84,8 +83,13 @@ class BookingRecyclerViewAdapter :
                 else {
                     itemView.booking_message.visibility = View.GONE
                 }
-                itemView.booking_spaces.text = spaces
+                itemView.booking_spaces.text = "$spaces ($guests Guests Allowed)"
                 itemView.booking_time.text = if (rawTime.isBlank()) "Not Specified" else rawTime
+                itemView.onClick {
+                    val intent = Intent(itemView.context, BookingActivity::class.java)
+                    intent.putExtra("DATA", booking)
+                    itemView.context.startActivity(intent)
+                }
             }
         }
     }

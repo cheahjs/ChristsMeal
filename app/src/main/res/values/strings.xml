@@ -14,4 +14,9 @@
     <string name="title_bookings">Formal Hall</string>
 
     <string name="network_fail">Failed to retrieve data</string>
+
+    <string name="title_activity_booking">Booking Details</string>
+    <string name="tab_text_info">Info</string>
+    <string name="tab_text_guests">Guests</string>
+    <string name="tab_text_booking">Book</string>
 </resources>

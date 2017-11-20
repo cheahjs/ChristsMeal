@@ -1,6 +1,7 @@
 package me.jscheah.christsmeal.adapters
 
 import android.os.Bundle
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -89,6 +90,9 @@ class TransactionRecyclerViewAdapter :
                     }
                     mutableList.add(it)
                 }
+        if (values != null) {
+            //TODO: use DiffUtil
+        }
         values = mutableList.toList()
     }
 

@@ -1,0 +1,131 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bookingInfoFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="me.jscheah.christsmeal.activities.BookingActivity$PlaceholderFragment">
+
+        <TextView
+            android:id="@+id/booking_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Events (CC Medical Soc)" />
+
+        <TextView
+            android:id="@+id/label_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Time: "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/booking_event" />
+
+        <TextView
+            android:id="@+id/booking_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Not Listed"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/label_time"
+            app:layout_constraintStart_toEndOf="@+id/label_time"
+            app:layout_constraintTop_toTopOf="@+id/label_time"
+            tools:text="19.00 for 19.30" />
+
+        <TextView
+            android:id="@+id/label_spaces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Spaces: "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_time" />
+
+        <TextView
+            android:id="@+id/booking_spaces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/label_spaces"
+            app:layout_constraintStart_toStartOf="@+id/booking_time"
+            app:layout_constraintTop_toTopOf="@+id/label_spaces"
+            tools:text="80 (0 Guests Allowed)" />
+
+        <TextView
+            android:id="@+id/label_booked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Booked:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_spaces" />
+
+        <TextView
+            android:id="@+id/booking_booked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/label_booked"
+            app:layout_constraintStart_toStartOf="@+id/booking_spaces"
+            app:layout_constraintTop_toTopOf="@+id/label_booked"
+            tools:text="2" />
+
+        <View
+            android:id="@+id/dividerInfo"
+            style="@style/Divider"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_booked" />
+
+        <TextView
+            android:id="@+id/booking_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dividerInfo"
+            tools:text="Booking closes noon Wednesday 15th November. Cost of meal is £15.00 which includes a charity donation of £2.70. Wine is £7.00 per person. Please tick the wine option if required.  " />
+
+        <View
+            android:id="@+id/dividerMenu"
+            style="@style/Divider"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/booking_message" />
+
+        <TextView
+            android:id="@+id/booking_menu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dividerMenu"
+            tools:text="_____________\nMenu\n***\nDuck Pate with Melba Toast\nVegetarian: Wild Mushrooms in Cream Garlic Sauce\nVegan: Melon Cocktail\n***\nRoast Turkey Roulade Cranberry Sauce, Pigs in Blankets,\nStuffing  Waterceress\nVegetarian  Vegan: Chestnut  Lentil Wellington with Winter Slaw\n Vegetable Gravy\nRoast Winter Vegetables\nBrussels Sprouts\nRoast Potatoes\n***\nChristmas Pudding  Brandy Sauce\nVegan: Poached Pears in Ginger Syrup with Mulled Wine Sorbet\n***\nCoffee  Mince Pies\nWINE:\nWhite: Cuvee de Paredaux Blanc\nRed: Christs College Claret\nPort: Christs College Port" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
