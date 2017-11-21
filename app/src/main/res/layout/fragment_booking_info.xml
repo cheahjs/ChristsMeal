@@ -8,7 +8,7 @@
         android:id="@+id/bookingInfoFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="me.jscheah.christsmeal.activities.BookingActivity$PlaceholderFragment">
+        tools:context="me.jscheah.christsmeal.booking.BookingActivity$PlaceholderFragment">
 
         <TextView
             android:id="@+id/booking_event"

@@ -1,4 +1,4 @@
-package me.jscheah.christsmeal.activities
+package me.jscheah.christsmeal.main
 
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import me.jscheah.christsmeal.data.Network
 import me.jscheah.christsmeal.R
-import me.jscheah.christsmeal.fragments.BookingFragment
-import me.jscheah.christsmeal.fragments.TransactionFragment
 
 
 class MainActivity : AppCompatActivity() {

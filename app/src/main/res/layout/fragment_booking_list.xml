@@ -15,6 +15,6 @@
         android:layout_marginRight="0dp"
 
         app:layoutManager="LinearLayoutManager"
-        tools:context="me.jscheah.christsmeal.fragments.BookingFragment"
+        tools:context="me.jscheah.christsmeal.main.BookingFragment"
         tools:listitem="@layout/item_booking" />
 </android.support.v4.widget.SwipeRefreshLayout>

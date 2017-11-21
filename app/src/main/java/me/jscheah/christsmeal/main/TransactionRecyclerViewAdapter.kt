@@ -1,7 +1,6 @@
-package me.jscheah.christsmeal.adapters
+package me.jscheah.christsmeal.main
 
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,9 +10,9 @@ import android.widget.TextView
 import com.brandongogetap.stickyheaders.exposed.StickyHeaderHandler
 import me.jscheah.christsmeal.R
 
-import me.jscheah.christsmeal.models.Transaction
-import me.jscheah.christsmeal.models.TransactionHeader
-import me.jscheah.christsmeal.models.TransactionBase
+import me.jscheah.christsmeal.data.models.Transaction
+import me.jscheah.christsmeal.data.models.TransactionHeader
+import me.jscheah.christsmeal.data.models.TransactionBase
 import java.util.*
 
 /**

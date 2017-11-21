@@ -1,4 +1,4 @@
-package me.jscheah.christsmeal.adapters
+package me.jscheah.christsmeal.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import me.jscheah.christsmeal.R
-import me.jscheah.christsmeal.models.Booking
+import me.jscheah.christsmeal.data.models.Booking
 import kotlinx.android.synthetic.main.item_booking.view.*
-import me.jscheah.christsmeal.activities.BookingActivity
+import me.jscheah.christsmeal.booking.BookingActivity
 import org.jetbrains.anko.sdk25.coroutines.onClick
 
 /**

@@ -5,7 +5,7 @@
     android:name="me.jscheah.christsmeal.fragments.TransactionFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.jscheah.christsmeal.fragments.TransactionFragment">
+    tools:context="me.jscheah.christsmeal.main.TransactionFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/balance_bar"

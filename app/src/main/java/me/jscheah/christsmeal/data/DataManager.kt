@@ -2,7 +2,7 @@ package me.jscheah.christsmeal.data
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import me.jscheah.christsmeal.models.Transaction
+import me.jscheah.christsmeal.data.models.Transaction
 import org.jetbrains.anko.db.*
 import java.util.*
 

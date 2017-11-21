@@ -12,11 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_main">
-        </activity>
+            android:name=".login.LoginActivity"
+            android:label="@string/title_activity_main"></activity>
         <activity
-            android:name=".activities.SplashActivity"
+            android:name=".splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +24,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/NoActionBarAppTheme"/>
+            android:theme="@style/NoActionBarAppTheme" />
+        <activity
+            android:name=".booking.BookingActivity"
+            android:label="@string/title_activity_booking"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.jscheah.christsmeal.main.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

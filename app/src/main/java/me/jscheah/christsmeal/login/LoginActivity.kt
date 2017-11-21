@@ -1,4 +1,4 @@
-package me.jscheah.christsmeal.activities
+package me.jscheah.christsmeal.login
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -23,6 +23,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import me.jscheah.christsmeal.data.Network
 import me.jscheah.christsmeal.R
+import me.jscheah.christsmeal.main.MainActivity
 
 /**
  * A login screen that offers login via crsid/password.

@@ -7,8 +7,8 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.CookiePersistor
 import kotlinx.coroutines.experimental.async
-import me.jscheah.christsmeal.models.Booking
-import me.jscheah.christsmeal.models.Transaction
+import me.jscheah.christsmeal.data.models.Booking
+import me.jscheah.christsmeal.data.models.Transaction
 import okhttp3.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
