@@ -19,6 +19,7 @@ class BookingDetailFragment : Fragment() {
 
     private var mBooking by Delegates.notNull<Booking>()
     private var refreshJob: Job?= null
+    private var menuText: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -29,6 +30,9 @@ class BookingDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_MENU)) {
+            booking_menu.text = savedInstanceState.getString(STATE_MENU)
+        }
         with(mBooking) {
             booking_booked.text = booked
             booking_event.text = desc
@@ -43,7 +47,9 @@ class BookingDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        refreshData()
+        if (savedInstanceState == null || savedInstanceState.containsKey(STATE_MENU)) {
+            refreshData()
+        }
     }
 
     override fun onDestroy() {
@@ -53,6 +59,12 @@ class BookingDetailFragment : Fragment() {
         super.onDestroy()
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        if (menuText != null) {
+            outState?.putString(STATE_MENU, menuText)
+        }
+    }
 
     private fun refreshData() {
         if (refreshJob != null && refreshJob!!.isActive)
@@ -60,6 +72,7 @@ class BookingDetailFragment : Fragment() {
         refreshJob = launch(UI) {
             try {
                 val menu = Network.getMenu(mBooking.id)
+                menuText = menu
                 booking_menu.text = menu
             } catch (e: Network.LoginFailedException) {
                 Toast.makeText(this@BookingDetailFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
@@ -69,6 +82,7 @@ class BookingDetailFragment : Fragment() {
     }
 
     companion object {
+        private val STATE_MENU = "state:menu"
         /**
          * The fragment argument representing the booking data for this fragment
          */
