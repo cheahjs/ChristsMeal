@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
         android:id="@+id/bookingInfoFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="me.jscheah.christsmeal.booking.BookingActivity$PlaceholderFragment">
+        tools:context="me.jscheah.christsmeal.booking.BookingDetailFragment">
 
         <TextView
             android:id="@+id/booking_event"
@@ -128,4 +128,4 @@
             tools:text="_____________\nMenu\n***\nDuck Pate with Melba Toast\nVegetarian: Wild Mushrooms in Cream Garlic Sauce\nVegan: Melon Cocktail\n***\nRoast Turkey Roulade Cranberry Sauce, Pigs in Blankets,\nStuffing  Waterceress\nVegetarian  Vegan: Chestnut  Lentil Wellington with Winter Slaw\n Vegetable Gravy\nRoast Winter Vegetables\nBrussels Sprouts\nRoast Potatoes\n***\nChristmas Pudding  Brandy Sauce\nVegan: Poached Pears in Ginger Syrup with Mulled Wine Sorbet\n***\nCoffee  Mince Pies\nWINE:\nWhite: Cuvee de Paredaux Blanc\nRed: Christs College Claret\nPort: Christs College Port" />
 
     </android.support.constraint.ConstraintLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

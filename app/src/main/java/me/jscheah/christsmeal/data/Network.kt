@@ -34,6 +34,7 @@ object Network {
     private val CHRISTS_INTRANET_LOGIN_URL = "https://intranet.christs.cam.ac.uk/mealbooking/login.php"
     private val CHRISTS_MEALBOOKING_URL = "https://intranet.christs.cam.ac.uk/mealbooking/mealbooking.php"
     private val CHRISTS_FAILED_LOGIN_PATH = "failedlogin.php"
+    private val CHRISTS_MENU_URL = "https://intranet.christs.cam.ac.uk/mealbooking/sittingmenu.php"
 
     private val cookieJar = PersistentCookieJar(SetCookieCache(), object: CookiePersistor {
         override fun saveAll(cookies: MutableCollection<Cookie>?) {}
@@ -448,5 +449,34 @@ object Network {
         }
 
         return bookingList.toList()
+    }
+
+    suspend fun getMenu(id: String): String {
+        Log.i(TAG, "getMenu: Starting menu fetch for $id")
+        try {
+            val requestBody = FormBody.Builder()
+                    .add("btnMenu", "Menu")
+                    .add("sitUniq", id)
+                    .build()
+            val request = Request.Builder()
+                    .url(CHRISTS_MENU_URL)
+                    .method("POST", requestBody)
+                    .build()
+            val response = async { httpClient.newCall(request).execute() }.await()
+            val finalUrl = response.request().url().toString()
+            Log.d(TAG, "getMenu: Redirected to $finalUrl")
+
+            val doc = Jsoup.parse(async { response.body()!!.string() }.await())
+
+            return parseMenu(doc)
+        } catch (e: Exception) {
+            Log.e(TAG, "getBalances: ", e)
+        }
+        throw Exception()
+    }
+
+    private fun parseMenu(doc: Document): String {
+        val rows = doc.select("table > tbody > tr > td > table > tbody > tr > td")
+        return rows.joinToString("\n") { x -> x.text()}
     }
 }
