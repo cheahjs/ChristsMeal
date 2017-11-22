@@ -26,7 +26,8 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/NoActionBarAppTheme" />
+            android:theme="@style/NoActionBarAppTheme"
+            android:launchMode="singleTop" />
         <activity
             android:name=".booking.BookingActivity"
             android:label="@string/title_activity_booking"
