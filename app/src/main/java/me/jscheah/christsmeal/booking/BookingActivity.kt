@@ -26,6 +26,7 @@ class BookingActivity : AppCompatActivity() {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var mBooking by Delegates.notNull<Booking>()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_booking)
@@ -47,23 +48,21 @@ class BookingActivity : AppCompatActivity() {
         toolbar.title = mBooking.rawDate
     }
 
-
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return BookingDetailFragment.newInstance(mBooking)
-        }
+        override fun getItem(position: Int): Fragment =// getItem is called to instantiate the fragment for the given page.
+                when (position) {
+                    0 -> BookingDetailFragment.newInstance(mBooking)
+                    1 -> BookingGuestFragment.newInstance(mBooking)
+                    else -> BookingDetailFragment.newInstance(mBooking)
+                }
 
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
-        }
+        override fun getCount(): Int =// Show 3 total pages.
+                3
     }
 
 }

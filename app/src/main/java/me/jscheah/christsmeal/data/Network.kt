@@ -35,6 +35,7 @@ object Network {
     private val CHRISTS_MEALBOOKING_URL = "https://intranet.christs.cam.ac.uk/mealbooking/mealbooking.php"
     private val CHRISTS_FAILED_LOGIN_PATH = "failedlogin.php"
     private val CHRISTS_MENU_URL = "https://intranet.christs.cam.ac.uk/mealbooking/sittingmenu.php"
+    private val CHRISTS_BOOKED_URL = "https://intranet.christs.cam.ac.uk/mealbooking/viewbooked.php"
 
     private val cookieJar = PersistentCookieJar(SetCookieCache(), object: CookiePersistor {
         override fun saveAll(cookies: MutableCollection<Cookie>?) {}
@@ -470,7 +471,7 @@ object Network {
 
             return parseMenu(doc)
         } catch (e: Exception) {
-            Log.e(TAG, "getBalances: ", e)
+            Log.e(TAG, "getMenu: ", e)
         }
         throw Exception()
     }
@@ -478,5 +479,54 @@ object Network {
     private fun parseMenu(doc: Document): String {
         val rows = doc.select("table > tbody > tr > td > table > tbody > tr > td")
         return rows.joinToString("\n") { x -> x.text()}
+    }
+
+    suspend fun getGuestList(sittingCode: String): List<String> {
+        Log.i(TAG, "getGuestList: Starting list fetch for $sittingCode")
+        if (!checkLogin())
+            throw LoginFailedException()
+        try {
+            val requestBody = FormBody.Builder()
+                    .add("sitUniq", sittingCode)
+                    .add("btnViewBooked", "View")
+                    .build()
+            val request = Request.Builder()
+                    .url(CHRISTS_BOOKED_URL)
+                    .method("POST", requestBody)
+                    .build()
+            val response = async { httpClient.newCall(request).execute() }.await()
+            val finalUrl = response.request().url().toString()
+            Log.d(TAG, "getGuestList: Redirected to $finalUrl")
+            if (CHRISTS_BOOKED_URL !in finalUrl) {
+                throw LoginFailedException()
+            }
+            val doc = Jsoup.parse(async { response.body()!!.string() }.await())
+
+            return parseGuestList(doc)
+        } catch (e: Exception) {
+            Log.e(TAG, "getGuestList: $e", e)
+            throw NetworkErrorException()
+        }
+    }
+
+    private fun parseGuestList(doc: Document): List<String> {
+        val guestList = LinkedList<String>()
+
+        val rows = doc.select(".Grid > tbody > tr")
+        for (row in rows) {
+            if (row.hasClass("Row")) {
+                val children = row.children()
+                val guestMealInput = children[3].select("input[name=guest_meal]")
+                if (guestMealInput.size == 0)
+                    continue
+                val guest = guestMealInput.attr("value") != "0"
+                if (guest) {
+                    guestList.add("Guest: ${children[2].text().trim()}")
+                } else {
+                    guestList.add(children[0].text().trim())
+                }
+            }
+        }
+        return guestList
     }
 }
