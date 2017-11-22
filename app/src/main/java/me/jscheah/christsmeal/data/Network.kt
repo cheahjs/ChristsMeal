@@ -313,8 +313,8 @@ object Network {
             return parseBalances(doc)
         } catch (e: Exception) {
             Log.e(TAG, "getBalances: ", e)
+            throw NetworkErrorException()
         }
-        throw Exception()
     }
 
     private fun parseBalances(doc: Document): Balances {
@@ -472,8 +472,8 @@ object Network {
             return parseMenu(doc)
         } catch (e: Exception) {
             Log.e(TAG, "getMenu: ", e)
+            throw NetworkErrorException()
         }
-        throw Exception()
     }
 
     private fun parseMenu(doc: Document): String {
