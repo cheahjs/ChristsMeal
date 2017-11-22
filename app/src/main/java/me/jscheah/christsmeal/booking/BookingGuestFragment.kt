@@ -66,9 +66,15 @@ class BookingGuestFragment : Fragment() {
         refreshJob = launch(UI) {
             try {
                 mGuestList = Network.getGuestList(mBooking.id)
-            } catch (e: Network.LoginFailedException) {
-                Toast.makeText(this@BookingGuestFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
-                return@launch
+            } catch (e: Exception) {
+                when (e) {
+                    is Network.LoginFailedException,
+                    is Network.NetworkErrorException -> {
+                        Toast.makeText(this@BookingGuestFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    else -> throw e
+                }
             }
 
             booking_guest_list.adapter = BookingGuestRecyclerViewAdapter(mGuestList!!)

@@ -91,10 +91,15 @@ class BookingFragment : Fragment() {
         refreshJob = launch(UI) {
             try {
                 bookingList = Network.getMealBookings()
-            } catch (e: Network.LoginFailedException) {
-                Toast.makeText(this@BookingFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
-                swipeRefreshLayout.isRefreshing = false
-                return@launch
+            } catch (e: Exception) {
+                when (e) {
+                    is Network.LoginFailedException,
+                    is Network.NetworkErrorException -> {
+                        Toast.makeText(this@BookingFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    else -> throw e
+                }
             }
 
             adapter.setData(bookingList!!)

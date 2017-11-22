@@ -113,10 +113,16 @@ class TransactionFragment : Fragment() {
         refreshJob = launch(UI) {
             try {
                 transactionList = dataManager.getTransactionHistory(10 * 365L, 2 * 365L)
-            } catch (e: Network.LoginFailedException) {
-                Toast.makeText(this@TransactionFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
-                swipeRefreshLayout.isRefreshing = false
-                return@launch
+            } catch (e: Exception) {
+                when (e) {
+                    is Network.LoginFailedException,
+                    is Network.NetworkErrorException -> {
+                        Toast.makeText(this@TransactionFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
+                        swipeRefreshLayout.isRefreshing = false
+                        return@launch
+                    }
+                    else -> throw e
+                }
             }
             balances = dataManager.getBalancesCached()
 

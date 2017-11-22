@@ -74,9 +74,15 @@ class BookingDetailFragment : Fragment() {
                 val menu = Network.getMenu(mBooking.id)
                 menuText = menu
                 booking_menu.text = menu
-            } catch (e: Network.LoginFailedException) {
-                Toast.makeText(this@BookingDetailFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
-                return@launch
+            } catch (e: Exception) {
+                when (e) {
+                     is Network.LoginFailedException,
+                     is Network.NetworkErrorException -> {
+                         Toast.makeText(this@BookingDetailFragment.context, R.string.network_fail, Toast.LENGTH_SHORT).show()
+                         return@launch
+                     }
+                    else -> throw e
+                }
             }
         }
     }
