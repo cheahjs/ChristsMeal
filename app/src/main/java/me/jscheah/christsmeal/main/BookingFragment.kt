@@ -30,7 +30,7 @@ class BookingFragment : Fragment() {
     private var refreshJob : Job? = null
     private var bookingList: List<Booking>? = null
     private var adapter = BookingRecyclerViewAdapter()
-    private var layoutManager: LinearLayoutManager by Delegates.notNull()
+    private var layoutManager: LinearLayoutManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +53,9 @@ class BookingFragment : Fragment() {
         if (savedInstanceState == null) {
 //            swipeRefreshLayout.isRefreshing = true
         } else {
-            layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_LAYOUT))
+            layoutManager!!.onRestoreInstanceState(savedInstanceState.getParcelable(STATE_LAYOUT))
         }
-        booking_list.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
+        booking_list.addItemDecoration(DividerItemDecoration(view.context, layoutManager!!.orientation))
         booking_list.layoutManager = layoutManager
         booking_list.adapter = adapter
     }
@@ -73,7 +73,7 @@ class BookingFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBundle(STATE_ADAPTER, adapter.saveState())
-        outState?.putParcelable(STATE_LAYOUT, layoutManager.onSaveInstanceState())
+        outState?.putParcelable(STATE_LAYOUT, layoutManager?.onSaveInstanceState())
     }
 
     override fun onDestroy() {
@@ -104,7 +104,7 @@ class BookingFragment : Fragment() {
     }
 
     fun scrollToTop() {
-        layoutManager.scrollToPosition(0)
+        layoutManager?.scrollToPosition(0)
     }
 
     companion object {
